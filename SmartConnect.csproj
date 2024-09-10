@@ -34,7 +34,6 @@
     <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.668" />
     <PackageReference Include="HarmonyX" Version="2.10.1" />
     <PackageReference Include="VRising.Unhollowed.Client" Version="1.0.2.794360001" />
-    <PackageReference Include="VRising.VampireCommandFramework" Version="0.9.0" />
     </ItemGroup>
 	<Target Name="BuildToClient" AfterTargets="Build">
 		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\VRising\BepInEx\plugins" />
