@@ -1,0 +1,18 @@
+[package.dependencies]
+BepInEx-BepInExPack_V_Rising = "1.691.3"
+deca-VampireCommandFramework = "0.9.0"
+
+[publish]
+communities = ["v-rising"]
+repository = "https://thunderstore.io"
+
+[publish.categories]
+v-rising = ["1-0-update", "mods", "client"]
+
+[package]
+namespace = "zfolmt"
+name = "SmartConnect"
+versionNumber = "1.0.0"
+description = "Automatically continues (last played) or joins (server address) based on configured options from the main menu!"
+websiteUrl = "https://github.com/mfoltz/SmartConnect"
+containsNsfwContent = false

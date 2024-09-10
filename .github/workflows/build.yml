@@ -1,0 +1,57 @@
+name: Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 7.0.x
+      
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0        
+        
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
+      - name: Extract Version from .csproj
+        id: extract_version
+        run: |
+          version=$(xmllint --xpath "string(//Project/PropertyGroup/Version)" SmartConnect.csproj)
+          echo "version=$version" >> $GITHUB_ENV   
+          
+      - name: Update thunderstore.toml
+        run: |
+          sed -i "s/versionNumber = \".*\"/versionNumber = \"${{ env.version }}\"/" thunderstore.toml
+          
+      - name: Build (Release)
+        run: dotnet build . --configuration Release -p:Version=${{ env.version }}
+     
+      - name: GH Release
+        uses: softprops/action-gh-release@v1
+        if: github.event_name == 'workflow_dispatch'
+        with:
+          body: Manual pre-release of ${{ env.version }}
+          name: v${{ env.version }}
+          fail_on_unmatched_files: true
+          prerelease: true
+          tag_name: v${{ env.version }}
+          files: |
+            ./bin/Release/net6.0/SmartConnect.dll
+            CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
